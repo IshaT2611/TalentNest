@@ -56,14 +56,22 @@ app.post('/register', async (req, res) => {
   const { name, email, password, gender, skills } = req.body;
 
   try {
-      // Ensure skills are stored as an array
-      const skillsArray = skills ? skills.split(',').map(skill => skill.trim()) : [];
+       let skillsArray = [];
+
+    if (typeof skills === 'string') {
+      skillsArray = skills.split(',').map(skill => skill.trim());
+    } else if (Array.isArray(skills)) {
+      skillsArray = skills;
+    }
+
 
       const newUser = new User({ name, email, password, gender, skills: skillsArray });
       await newUser.save();
       
       console.log("✅ Registration successful:", newUser);
-      res.redirect('/login.html');  // Redirect to login page
+       console.log("✅ Sending JSON response to frontend...");
+    res.status(200).json({ message: "Registration successful!" });
+
   } catch (err) {
       console.error("❌ Registration Failed:", err);
       res.status(400).send(`Registration Failed: ${err.message}`);
