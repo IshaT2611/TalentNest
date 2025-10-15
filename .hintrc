@@ -6,14 +6,32 @@
     "axe/name-role-value": [
       "default",
       {
-        "link-name": "off"
+        "link-name": "off",
+        "button-name": "off"
       }
     ],
     "axe/forms": [
       "default",
       {
-        "label": "off"
+        "label": "off",
+        "select-name": "off"
       }
-    ]
+    ],
+    "axe/text-alternatives": [
+      "default",
+      {
+        "document-title": "off"
+      }
+    ],
+    "axe/language": [
+      "default",
+      {
+        "html-has-lang": "off"
+      }
+    ],
+    "meta-charset-utf-8": "off",
+    "disown-opener": "off",
+    "button-type": "off",
+    "meta-viewport": "off"
   }
 }

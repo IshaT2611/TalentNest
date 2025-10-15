@@ -212,7 +212,7 @@
 
 <div class="container" id="container">
     <div class="form-container sign-up-container">
-        <form action="/admin/signup" method="POST">
+        <form action="/api/admin/signup" method="POST">
             <h1>Create Account</h1>
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="email" placeholder="Enter your Email" required>
@@ -222,7 +222,7 @@
         
     </div>
     <div class="form-container sign-in-container">
-        <form action="/admin/login" method="POST">
+        <form id="adminLoginForm">
             <h1>Sign in</h1>
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="email" placeholder="Enter your Email" required>
@@ -248,18 +248,24 @@
 </div>
 
 <script>
-    const signUpButton = document.getElementById('signUp');
-    const signInButton = document.getElementById('signIn');
-    const container = document.getElementById('container');
+   document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = e.target.email.value;
+  const password = e.target.password.value;
 
-    signUpButton.addEventListener('click', () => {
-        container.classList.add("right-panel-active");
-    });
+  const res = await fetch('/api/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
 
-    signInButton.addEventListener('click', () => {
-        container.classList.remove("right-panel-active");
-    });
-    
+  const data = await res.json();
+  if (data.message === "Admin login successful!") {
+    window.location.href = `/admin/home.html?name=${data.admin.username}`;
+  } else {
+    alert(data.message);
+  }
+});
 </script>
 
 </body>

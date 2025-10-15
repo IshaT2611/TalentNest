@@ -94,10 +94,6 @@
 <body>
 
     <div class="registration-form">
-  
-
-        <action="/register" method="POST">
-
             <h2>Student Registration</h2>
     <form id="registerForm">
       <label for="name">Full Name</label>
@@ -203,7 +199,7 @@
       };
 
       try {
-        const response = await fetch('http://localhost:3000/register', {
+        const response = await fetch('http://localhost:3000/api/student/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(userData)
@@ -220,7 +216,7 @@ window.location.href = "/login.html";
 
        
       } catch (error) {
-        console.error("❌ Registration error:", error);
+        
         alert("Registration failed: " + error.message);
       }
     });

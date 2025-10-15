@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - View Job Applications</title>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f7f6; padding: 2rem; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #7b2cbf; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        #loading-message { text-align: center; font-style: italic; color: #777; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Student Job Applications</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Student Email</th>
+                <th>Company</th>
+                <th>Job Title</th>
+                <th>Application Date</th>
+                <th>Resume</th> </tr>
+        </thead>
+        <tbody id="applications-tbody">
+            </tbody>
+    </table>
+    <p id="loading-message">Loading applications...</p>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const tableBody = document.getElementById('applications-tbody');
+    const loadingMessage = document.getElementById('loading-message');
+
+    try {
+        const response = await fetch('/api/applications');
+        if (!response.ok) {
+            throw new Error(`Server responded with status: ${response.status}`);
+        }
+        const applications = await response.json();
+        
+        loadingMessage.style.display = 'none';
+
+        if (applications.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No applications submitted yet.</td></tr>';
+            return;
+        }
+
+        tableBody.innerHTML = '';
+
+        applications.forEach(app => {
+            const row = document.createElement('tr');
+            
+            const resumeLink = app.resumePath 
+                ? `<a href="/${app.resumePath.replace(/\\/g, '/')}" target="_blank">View Resume</a>`
+                : 'Not Available';
+
+            row.innerHTML = `
+                <td>${app.studentName || 'N/A'}</td>
+                <td>${app.studentEmail || 'N/A'}</td>
+                <td>${app.company}</td>
+                <td>${app.jobTitle}</td>
+                <td>${new Date(app.applicationDate).toLocaleDateString()}</td>
+                <td>${resumeLink}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error('Failed to fetch applications:', error);
+        loadingMessage.textContent = 'Error loading applications.';
+        loadingMessage.style.color = 'red';
+    }
+});
+</script>
+
+</body>
+</html>

@@ -4,13 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduLink - Learning Platform</title>
+    <title>TalentNest - Learning Platform</title>
     <link rel="stylesheet" href="home.css">
     <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
 
     <!-- Font Awesome CDN for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
     <style>
         * {
             margin: 0;
@@ -21,7 +25,7 @@
         }
 
         body {
-            background-color: #0B112A;
+            background-color: #03060f;
             color: white;
             margin: 0;
         }
@@ -35,13 +39,13 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 50px;
-            background-color: #F0F4FD;
+            background-color: #0d0e0f;
         }
 
         .navbar .logo {
             font-size: 30px;
             font-weight: bold;
-            color: #1E3A5F;
+            color: #dbe6f5;
         }
 
         .navbar .nav-links {
@@ -51,13 +55,13 @@
         }
 
         .navbar .nav-links li a {
-            color: #1E3A5F;
+            color: #eeeff1;
             text-decoration: none;
             font-size: 18px;
         }
 
         .navbar .nav-links li a:hover {
-            color: #007BFF;
+            color: #ff95b3;
         }
 
         ._container {
@@ -103,10 +107,11 @@
         }
 
         .home-content h1 {
-            font-size: 50px;
-            margin-bottom: 20px;
-            color: #FFFFFF;
+            font-size: 25px;
+            margin-bottom: 100px;
+            color: #090909ed;
         }
+       
 
         /* Home */
         .b_container {
@@ -127,203 +132,336 @@
             background-color: #F0F4FD;
         }
 
-        /* About Us */
-        .about-us {
-            background-color: #F0F4FD;
-            color: #1E3A5F;
-            padding: 100px 50px;
+/* about us */
+        /* --- Header Section (The large photo at the top) --- */
+        .header-section {
+            position: relative;
+            height: 100px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            border-radius: 0 0 40px 40px;
+            overflow: hidden;
+            background: linear-gradient(rgba(249, 119, 165, 0.85), rgba(10, 88, 208, 0.85)), url('https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat center center/cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
-        .about-us h2 {
-            font-size: 42px;
+        .header-content {
+            text-align: center;
+            color: var(--white);
+        }
+
+        .header-content h1 {
+            font-size: 3.5rem;
             font-weight: 700;
-            color: #1E3A5F;
-            margin-bottom: 20px;
+            margin: 0;
         }
 
-        .about-container {
+        .breadcrumbs {
+            margin-top: 20px;
+        }
+
+        .breadcrumbs a {
+            text-decoration: none;
+            color: var(--white);
+            background-color: rgba(221, 198, 198, 0.1);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin: 0 5px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .breadcrumbs a.active {
+            background-color: var(--white);
+            color: var(--primary-blue);
+        }
+
+        /* --- About Section (The three-column layout below the header) --- */
+        .about-section {
+            padding: 80px 0;
+        }
+        
+        .about-grid {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .about-image {
-            flex: 1;
-        }
-
-        .about-image img {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .about-text {
-            flex: 1;
-            padding-left: 50px;
-        }
-
-        .about-text h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #1E3A5F;
-        }
-
-        .about-text p {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: #666666;
-            max-width: 600px;
-        }
-
-        .about-features {
-            list-style: none;
-            padding: 0;
-        }
-
-        .about-features li {
-            font-size: 18px;
-            color: #333333;
-            margin-bottom: 15px;
-        }
-
-        .about-features li i {
-            color: #007BFF;
-            margin-right: 10px;
-        }
-
-        /* Why Choose Us Section */
-        .why-choose-us {
-            background-color: #0B112A; /* Dark background */
-            color: #FFFFFF; /* White text */
-            padding: 80px 50px;
-            margin-top: 20px;
-            text-align: center;
-            transition: transform 1s ease-in-out;
-        }
-
-        .why-choose-us h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #007BFF; /* Bright blue color */
-        }
-
-        .why-choose-us p {
-            font-size: 18px;
-            margin-bottom: 40px;
-            color: #CCCCCC; /* Light grey text */
-        }
-
-        /* Layout for Why Choose Us */
-        .why-layout {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
             gap: 20px;
         }
 
-        .why-left, .why-right {
+        /* Left Column: Stats */
+        .stats-column {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 30px; /* Gap between the cards */
+            gap: 40px;
+            padding: 70px;
         }
 
-        .why-center {
-            flex: 0 0 300px; /* Center image fixed size */
+        .stat-item h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 0;
         }
 
-        .why-center img {
-            width: 550px;
-            height: 350px;
+        .stat-item p {
+            font-size: 1rem;
+            color: var(--light-text);
+            margin: 0;
         }
 
-        /* Individual Why Item Card */
-        .why-item {
-            background-color: #1E3A5F; /* Dark blue card background */
-            padding: 30px;
-            border-radius: 10px;
+        /* Center Column: Image */
+        .image-column {
+            flex: 1.4;
+            position: relative;
             text-align: center;
-            max-width: 250px;
         }
 
-        .why-item h3 {
-            font-size: 24px;
-            margin-top: 15px;
-            color: #FFFFFF;
+        .main-image {
+            width: 100%;
+            border-radius: 20px;
+            display: block;
+        }
+        
+        /* Rotating Badge */
+        .rotating-badge {
+            position: absolute;
+            top: -30px;
+            left: -30px;
+            width: 100px;
+            height: 100px;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .why-item p {
-            font-size: 16px;
-            margin-top: 10px;
-            color: #CCCCCC;
+        /* Right Column: Content */
+        .content-column {
+            flex: 2;
+            padding-left: 30px;
         }
 
-        .why-item i {
-            font-size: 40px;
-            color: #007BFF; /* Icon color */
+        .content-column .tagline {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
         }
 
-        /* Responsive Design for Smaller Screens */
-        @media (max-width: 768px) {
-            .why-layout {
+        .content-column h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        .content-column p {
+            color: var(--light-text);
+            line-height: 1.7;
+            margin-bottom: 80px;
+        }
+
+        .read-more-btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .read-more-btn:hover {
+            background-color: #e6074a;
+            transform: translateY(-2px);
+        }
+
+        .read-more-btn .arrow {
+            margin-left: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .read-more-btn:hover .arrow {
+            transform: translateX(5px);
+        }
+        
+        
+
+        /* --- Responsive Design --- */
+        @media (max-width: 992px) {
+            .about-grid {
                 flex-direction: column;
-                align-items: center;
+                text-align: center;
             }
-
-            .why-left, .why-right {
+            .content-column {
+                padding-left: 0;
+                margin-top: 40px;
+            }
+            .stats-column {
                 flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
+                justify-content: space-around;
+                width: 100%;
             }
-
-            .why-center {
-                margin: 40px 0; /* Margin for the image to add space in mobile view */
+        }
+        
+        @media (max-width: 768px) {
+            .header-section {
+                height: 250px;
+                border-radius: 0 0 30px 30px;
             }
+            .header-content h1 {
+                font-size: 2.5rem;
+            }
+            .content-column h2 {
+                font-size: 2rem;
+            }
+            .stats-column {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .rotating-badge {
+                width: 80px;
+                height: 80px;
+                top: -20px;
+                left: -20px;
+            }
+        }
+        /* Why Choose Us Section */
+        .page-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 10px;
+            box-sizing: border-box;
+        }
 
-            .why-item {
-                max-width: 100%;
+        .content-container {
+            max-width: 1100px;
+            width: 100%;
+            display: flex;
+            gap: 80px;
+            align-items: flex-start; /* Aligns items to the top */
+        }
+
+        /* Left Column: Text and Image */
+        .info-column {
+            flex: 1;
+        }
+
+        .info-column h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .info-column p {
+            color: #d1d5db; /* Lighter text for description */
+            line-height: 1.7;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            max-width: 450px;
+        }
+        
+        .info-column img {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+        }
+
+        /* Right Column: Features */
+        .features-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .feature-card {
+            background-color: #020d3e; /* Slightly lighter blue for cards */
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #2a3a69; /* Subtle border */
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #4f46e5;
+        }
+        
+        .feature-card .icon {
+            font-size: 1.5rem;
+            color: #a5b4fc; /* Light purple for icons */
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+        }
+        
+        .feature-card p {
+            color: #d1d5db;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .content-container {
+                flex-direction: column;
+                gap: 60px;
+            }
+            .info-column h1 {
+                font-size: 2.8rem;
             }
         }
 
         /* Our Team Section */
         .our-team {
-            background-color: #F0F4FD; /* Light background */
+            background-color: #f792b0; /* Light background */
             color: #1E3A5F; /* Dark blue text */
-            padding: 80px 178px;
+            padding: 80px 118px;
             text-align: center;
         }
 
         .our-team h2 {
             font-size: 36px;
             margin-bottom: 20px;
-            color: #007BFF; /* Blue heading */
+            color: #161717; /* Blue heading */
         }
 
         .our-team p {
             font-size: 18px;
             margin-bottom: 40px;
-            color: #1E3A5F; /* Dark text */
+            color: #090b0f; /* Dark text */
         }
 
         /* Team Grid Layout */
         .team-grid {
             display: flex;
-            gap: 170px; /* Reduced gap between cards */
+            gap: 100px; /* Reduced gap between cards */
         }
 
         /* Team Member Card */
         .team-member {
-            background-color: #161D6F; /* Dark blue background for cards */
-            padding: 25px; /* Reduced padding */
+            background-color: #1a1a1bdc; /* Dark blue background for cards */
+            padding: 15px; /* Reduced padding */
             border-radius: 10px;
             text-align: center;
             flex: 1 1 calc(33.333% - 10px); /* Flexible width for each card */
-            max-width: 330px;
+            max-width: 500px;
             transition: background-color 0.3s ease;
         }
 
@@ -347,7 +485,7 @@
 
         /* Hover Effect */
         .team-member:hover {
-            background-color: #007BFF; /* Change background color on hover */
+            background-color: #0f0f10; /* Change background color on hover */
             color: #FFFFFF; /* Ensure text is white on hover */
         }
 
@@ -377,7 +515,7 @@
 
         /* Team Member Card Hover Effect */
         .team-member:hover {
-            background-color: #355ba7c9; /* Change card background on hover */
+            background-color: #696767c9; /* Change card background on hover */
             color: #FFFFFF; /* Text color on hover */
         }
 
@@ -396,89 +534,206 @@
                 font-size: 18px;
             }
         }
+/* footer  */
+/* --- Top CTA Section (Light Green) --- */
+        .cta-section {
+            background-color: #f5edf5;
+            padding: 60px 20px;
+        }
 
-        /* Footer Styling */
-        footer {
-            background-color: #132842;
-            color: #fff;
-            padding: 70px 0;
-            text-align: center;
+        .cta-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .cta-text h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #101011;
+            margin: 0 0 10px 0;
+        }
+
+        .cta-text p {
+            font-size: 1.1rem;
+            color: #5f6c7b;
+            margin: 0 0 30px 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #1a202c;
+            color: #ffffff;
+            padding: 14px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #333;
+            transform: translateY(-3px);
+        }
+
+        .cta-image img {
+            max-width: 450px;
+            height: auto;
+        }
+        
+        /* --- Main Footer Section (Dark Blue) --- */
+        .main-footer {
+            background-color: #111112; /* The dark blue from the image */
+            color: #ffffff;
+            padding: 60px 20px;
         }
 
         .footer-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr) 1.5fr; /* 5 columns layout */
+            gap: 40px;
         }
 
-        .footer-about,
-        .footer-links,
-        .footer-contact,
-        .footer-social {
-            flex: 1 1 200px;
-            margin: 15px;
-        }
-
-        .footer-about h3, 
-        .footer-links h3, 
-        .footer-contact h3, 
-        .footer-social h3 {
-            color: #F0F4FD;
+        .footer-column h4 {
+            font-size: 1rem;
+            font-weight: 600;
             margin-bottom: 20px;
         }
 
-        .footer-about p,
-        .footer-contact p {
-            color: #CCCCCC;
-        }
-
-        .footer-links ul {
+        .footer-column ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
-        .footer-links ul li {
-            margin: 10px 0;
+        .footer-column ul li {
+            margin-bottom: 12px;
         }
 
-        .footer-links ul li a {
-            color: #CCCCCC;
+        .footer-column ul a {
+            color: #d1d5db; /* Light gray for links */
             text-decoration: none;
-            transition: color 0.3s ease;
+            font-size: 0.9rem;
+            transition: color 0.3s;
         }
 
-        .footer-links ul li a:hover {
-            color: #007BFF;
+        .footer-column ul a:hover {
+            color: #ffffff;
         }
 
-        .footer-social .social-icons {
-            margin-top: 15px;
+        .footer-info-column {
+            text-align: right;
         }
 
-        .footer-social .social-icons a {
-            color: #CCCCCC;
-            font-size: 20px;
-            margin: 0 10px;
-            transition: color 0.3s ease;
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
         }
 
-        .footer-social .social-icons a:hover {
-            color: #007BFF;
+        .footer-socials {
+            margin-bottom: 20px;
         }
 
-        /* Responsive Styling */
-        @media (max-width: 768px) {
+        .footer-socials a {
+            color: #ffffff;
+            font-size: 1.2rem;
+            margin-left: 15px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-socials a:hover {
+            color: #a5b4fc; /* Light purple on hover */
+        }
+        
+        .footer-address {
+            font-size: 0.9rem;
+            color: #d1d5db;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .footer-contact-btn {
+            display: inline-block;
+            background-color: #010450; /* Purple button */
+            color: #ffffff;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .footer-contact-btn:hover {
+            background-color: #4338ca;
+        }
+
+        /* --- Bottom Bar --- */
+        .footer-bottom-bar {
+            background-color: #fb81c4;
+            color: #131416;
+            font-size: 0.8rem;
+            padding: 20px;
+            border-top: 1px solid #d5dee9; /* Subtle separator line */
+        }
+        
+        .bottom-bar-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bottom-bar-links a {
+            color: #131416;
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.3s;
+        }
+
+        .bottom-bar-links a:hover {
+            color: #0f0e0e;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 992px) {
             .footer-container {
-                flex-direction: column;
-                text-align: left;
+                grid-template-columns: repeat(3, 1fr);
             }
-
-            .footer-about, .footer-links, .footer-contact, .footer-social {
-                margin: 20px 0;
+            .footer-info-column {
+                grid-column: 1 / -1; /* Span full width */
+                text-align: left;
+                margin-top: 30px;
             }
         }
+
+        @media (max-width: 768px) {
+            .cta-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+             .bottom-bar-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+         @media (max-width: 480px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         /* Slide-up and Slide-down Classes for Smooth Transition */
         .slide-up {
             transform: translateY(-100vh); /* Move the about section up */
@@ -493,16 +748,14 @@
         }
     </style>
 </head>
-
-<body>
     <!-- Navbar -->
     <nav class="navbar" >
-        <div class="logo"><span style="color: #007BFF;">E</span>du<span style="color: #007BFF;">L</span>ink</div>
+        <div class="logo"><span style="color: #f48fab;">T</span>alent<span style="color: #f48fab;">N</span>est</div>
         <ul class="nav-links">
             <li><a href="#">Home</a></li>
             <li><a href="#about">About Us</a></li>
             <li><a href="resource.html">Resources</a></li>
-            <li><a href="admin/adminLogin.html">Admin</a></li>
+            <li><a href="/admin/adminLogin.html">Admin</a></li>
             <li><a href="contact.html">Contact Us</a></li>
         </ul>
 
@@ -516,93 +769,109 @@
 
     <!-- Home Section with Text and Buttons -->
     <div class="home-content">
-        <h1>Single Platform <br> For All Your <br> <span style="color: #007BFF;">Learning</span> Needs</h1>
+        <h1>Your career journey<br>beings with the right <span style="color: #ef0f52;">"Placement"</span><br>
+        From <span style="color:#0056b3;">Campus</span> to <span style="color: #0056b3;">Corporate</span>, the smarter way.</h1>
     </div>
 
     <!-- Home -->
     <div class="b_container" id="home">
-        <img src="img/bimg.png" alt="Banner Image">
+        <img src="img/bg.png" alt="Banner Image">
     </div>
 
-    <!-- About Us Section -->
-    <div class="container1" id="about">
-        <div class="about-us">
-            <div class="about-container">
-                <!-- Left Image Section -->
-                <div class="about-image">
-                    <img src="img/about.png" alt="About Us Image">
-                </div>
 
-                <!-- Right Text Section -->
-                <div class="about-text">
-                    <h2>Welcome to EduLink</h2>
-                    <p>
-                        At EduLink, we provide top-notch online education with skilled instructors from all over the world. Our platform
-                        is designed to make learning accessible and convenient for everyone.
-                    </p>
-                    <p>
-                        Whether you want to learn new skills, earn international certificates, or access expert guidance, EduLink is the
-                        perfect place to start your learning journey.
-                    </p>
-
-                    <ul class="about-features">
-                        <li><i class="fas fa-arrow-right"></i> Perfect Guidance</li>
-                        <li><i class="fas fa-arrow-right"></i> Certificate</li>
-                        <li><i class="fas fa-arrow-right"></i> Online Courses</li>
-                        <li><i class="fas fa-arrow-right"></i> Various Internships</li>
-                    </ul>
-
-                </div>
-            </div>
+    <!-- about us -->
+<!-- Header Section -->
+    <header class="header-section">
+        <div class="header-content">
+            <h1>About Us</h1>
         </div>
+    </header>
 
-        <!-- Why Choose Us Section -->
-        <section class="why-choose-us" id="why-choose-us">
-            <div class="why-container">
-                <h2>Why Choose Us</h2>
-                <p>
-                    EduLink offers world-class experiences to help you gain valuable skills. Here’s why thousands of learners 
-                    choose us:
-                </p>
-        
-                <div class="why-layout">
-                    <!-- Left Side Cards -->
-                    <div class="why-left">
-                        <div class="why-item">
-                            <i class="fas fa-graduation-cap"></i>
-                            <h3>Expert Gudiance</h3>
-                            <p>Learn from top resources which are published by the experts.</p>
+    <!-- Main Content -->
+    <main>
+        <!-- About Section -->
+        <section class="about-section">
+            <div class="container">
+                <div class="about-grid">
+                    
+                    <!-- Left Column: Stats -->
+                    <div class="stats-column">
+                        <div class="stat-item">
+                            <h2>15k+</h2>
+                            <p>Successful Placements</p>
                         </div>
-        
-                        <div class="why-item">
-                            <i class="fas fa-globe"></i>
-                            <h3>Global Certification</h3>
-                            <p>Get recognized with our certified programs.</p>
+                        <div class="stat-item">
+                            <h2>98%</h2>
+                            <p>Institution Success Rate</p>
+                        </div>
+                        <div class="stat-item">
+                            <h2>500+</h2>
+                            <p>Corporate Partners</p>
                         </div>
                     </div>
-        
-                    <!-- Center Image -->
-                    <div class="why-center">
-                        <img src="img/aaa.jpg" alt="Why Choose Us Image">
+
+                    <!-- Center Column: Image with Badge -->
+                    <div class="image-column">
+                        <img src="img/laptop.jpg" alt="A professional woman working on a laptop in a modern cafe" class="main-image">
+                        
                     </div>
-        
-                    <!-- Right Side Cards -->
-                    <div class="why-right">
-                        <div class="why-item">
-                            <i class="fas fa-book"></i>
-                            <h3>Wide Range of Courses</h3>
-                            <p>Choose from a variety of courses to suit your learning needs.</p>
-                        </div>
-        
-                        <div class="why-item">
-                            <i class="fas fa-clock"></i>
-                            <h3>Flexible Learning</h3>
-                            <p>Learn at your own pace with flexible schedules.</p>
-                        </div>
+
+                    <!-- Right Column: Text Content -->
+                    <div class="content-column">
+                        <p class="tagline">ABOUT TALENTNEST</p>
+                        <h2>Smart solutions for the future of placements.</h2>
+                        <p>
+                            We bridge the critical gap between academic learning and industry demands. Our platform moves beyond traditional recruitment, using AI-driven insights to connect talented students with their ideal career paths while providing companies with verified, skilled candidates.
+                        </p>
+                        <a href="learnmore.html" class="read-more-btn">
+                            Read More <span class="arrow">&#8594;</span>
+                        </a>
                     </div>
+
                 </div>
             </div>
         </section>
+    </main>
+
+   
+        <!-- Why Choose Us Section -->
+        <div class="page-wrapper">
+        <div class="content-container">
+            
+            <!-- Left Info Column -->
+            <div class="info-column">
+                <h1>Why choose us?</h1>
+                <p>Built specifically for students and placement officers to save time, stay organized, and secure better career opportunities with less effort.</p>
+                <!-- This image is a high-quality, royalty-free alternative that matches the theme and style -->
+                <img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="A team of professionals collaborating around a table">
+            </div>
+
+            <!-- Right Features Column -->
+            <div class="features-column">
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>AI-Driven Insights</h3>
+                    <p>Make smarter career decisions with live data and actionable insights, delivered in real-time to stay ahead of the curve.</p>
+                </div>
+                 <div class="feature-card">
+                    <div class="icon"><i class="fas fa-map-signs"></i></div>
+                    <h3>Personalized Pathways</h3>
+                    <p>Choose plans that adapt to your career needs, offering unparalleled scalability and personalized skill development.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Verified Assessments</h3>
+                    <p>Prioritize integrity with cutting-edge AI proctoring and robust security features for every examination.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-headset"></i></div>
+                    <h3>Alumni Mentorship</h3>
+                    <p>Access expert assistance from alumni 24/7 to ensure you're never alone on your growth journey.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
         <!-- Our Team Section -->
         <section class="our-team" id="our-team">
@@ -613,7 +882,18 @@
                     <!-- Team Member 1 -->
                     <div class="team-member">
                         <img src="img/dummy.png" alt="Member 1">
-                        <h3>Member 1</h3>
+                        <h3>Priyanshu Singh</h3>
+                        <p>IT Student</p>
+                        <div class="social-icons">
+                            <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                            <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <!-- Team Member 4 -->
+                    <div class="team-member">
+                        <img src="img/isha.jpeg" alt="Member 1">
+                        <h3>Isha Tiwari</h3>
                         <p>IT Student</p>
                         <div class="social-icons">
                             <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
@@ -624,8 +904,8 @@
 
                     <!-- Team Member 2 -->
                     <div class="team-member">
-                        <img src="img/dummy.png" alt="Member 2">
-                        <h3>Member 2</h3>
+                        <img src="img/nikesh.jpeg" alt="Member 2">
+                        <h3>Nikesh Purohit</h3>
                         <p>IT Student</p>
                         <div class="social-icons">
                             <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
@@ -637,7 +917,7 @@
                     <!-- Team Member 3 -->
                     <div class="team-member">
                         <img src="img/dummy.png" alt="Member 3">
-                        <h3>Member 3</h3>
+                        <h3>Amit Singh</h3>
                         <p>IT Student</p>
                         <div class="social-icons">
                             <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
@@ -649,53 +929,86 @@
             </div>
         </section>
 
-        <!-- Footer Section -->
-        <footer>
-            <div class="footer-container">
-                <!-- Footer About Section -->
-                <div class="footer-about">
-                    <h3>About EduLink</h3>
-                    <p>
-                        EduLink is a comprehensive online learning platform dedicated to providing quality resources for students and professionals. Join us and enhance your skills.
-                    </p>
-                </div>
-
-                <!-- Footer Links -->
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#our-team">Our Team</a></li>
-                        <li><a href="resource.html">Resources</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                    </ul>
-                </div>
-
-                <!-- Footer Contact Info -->
-                <div class="footer-contact">
-                    <h3>Contact Us</h3>
-                    <p>Email: info@edulink.com</p>
-                    <p>Phone: +1 123-456-7890</p>
-                    <p>Address: 123 Learning Ave, Knowledge City, World</p>
-                </div>
-
-                <!-- Footer Social Media -->
-                <div class="footer-social">
-                    <h3>Follow Us</h3>
-                    <div class="social-icons">
-                        <a href="https://www.linkedin.com" target="_blank"><i class="fab fa-linkedin"></i></a>
-                        <a href="https://www.twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.github.com" target="_blank"><i class="fab fa-github"></i></a>
-                    </div>
-                </div>
-            </div><br>
-
-            <!-- Footer Bottom Section -->
-            <div class="footer-bottom">
-                <p>&copy; 2025 EduLink. All Rights Reserved.</p>
+       <!-- foooter section -->
+        <!-- Top CTA Section -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <div class="cta-text">
+                <h2>Ready to get started?</h2>
+                <p>Get in touch with our team today.</p>
+                <a href="contact.html" class="cta-button">Contact Us</a>
             </div>
-        </footer>
+            <div class="cta-image">
+                <img src="img/students.jpg" alt="Illustration of a person working on a laptop">
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h4>Solutions</h4>
+                <ul>
+                    <li><a href="#">Overview</a></li>
+                    <li><a href="#">AI Resume Checker</a></li>
+                    <li><a href="#">Proctored Assessments</a></li>
+                    <li><a href="#">Alumni Network</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Resource Center</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Webinars</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">DE&I</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Trust Center</a></li>
+                </ul>
+            </div>
+             <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Student Help</a></li>
+                    <li><a href="#">Institution Help</a></li>
+                    <li><a href="#">Ask an Expert</a></li>
+                </ul>
+            </div>
+            <div class="footer-info-column">
+                <div class="footer-logo">TalentNest</div>
+                 <div class="footer-socials">
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+                <div class="footer-address">
+                    123 Tech Park Avenue<br>
+                    Pune, Maharashtra, 411057
+                </div>
+                <a href="contact.html" class="footer-contact-btn">Contact us</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom-bar">
+        <div class="bottom-bar-container">
+            <div class="copyright">
+                Copyright &copy; 2025 TalentNest, Inc.
+            </div>
+            <div class="bottom-bar-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Security</a>
+            </div>
+        </div>
     </div>
 
 </body>

@@ -212,24 +212,24 @@
 
 <div class="container" id="container">
     <div class="form-container sign-up-container">
-        <form action="/login" method="POST">
+               <form id="signUpForm">
             <h1>Create Account</h1>
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="email" placeholder="Enter your Email" required>
             <input type="password" name="password" placeholder="Enter your Password" required>
             <input type="text" placeholder="UID" />
-            <button>Sign Up</button>
-        </form>
+          <button type="submit">Sign Up</button>
+</form>
         
     </div>
     <div class="form-container sign-in-container">
-        <form action="/login" method="POST">
+        <form id="signInForm">
             <h1>Sign in</h1>
             <input type="email" name="email" placeholder="Enter your Email" required>
             <input type="password" name="password" placeholder="Enter your Password" required>
             <input type="text" placeholder="Username" />
             <a href="#">Forgot your password?</a>
-            <button>Sign In</button>
+                <button type="submit">Sign In</button>
         </form>
     </div>
     <div class="overlay-container">
@@ -247,40 +247,75 @@
         </div>
     </div>
 </div>
-
 <script>
     const signUpButton = document.getElementById('signUp');
     const signInButton = document.getElementById('signIn');
     const container = document.getElementById('container');
+    const signInForm = document.getElementById('signInForm');
+    const signUpForm = document.getElementById('signUpForm');
 
-    signUpButton.addEventListener('click', () => {
-        container.classList.add("right-panel-active");
+    signUpButton.addEventListener('click', () => container.classList.add("right-panel-active"));
+    signInButton.addEventListener('click', () => container.classList.remove("right-panel-active"));
+
+    // --- LOGIC FOR THE SIGN-IN FORM ---
+if (signInForm) {
+    signInForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries()); // { email, password }
+
+        try {
+            const response = await fetch('http://localhost:3000/api/students/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data), // ✅ use data here, not undefined vars
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('studentId', result.data.studentId);
+                
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Login Failed: ' + result.message);
+            }
+        } catch (error) {
+            alert('An error occurred during login. Check the console.');
+        }
     });
+}
 
-    signInButton.addEventListener('click', () => {
-        container.classList.remove("right-panel-active");
-    });
-    document.getElementById('loginForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-    const data = Object.fromEntries(formData.entries());
-  
 
-    
-    const response = await fetch('http://localhost:3000/api/students/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-      
-    });
+    // --- LOGIC FOR THE SIGN-UP FORM ---
+    if (signUpForm) {
+        signUpForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch('/api/students/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
 
-    const result = await response.text();
-    alert(result);
-    if (result === 'Login Successful!') {
-      window.location.href = 'dashboard.html';
+                if (response.ok) {
+                    alert('Registration Successful! Please sign in.');
+                    container.classList.remove("right-panel-active"); 
+                } else {
+                    alert('Registration Failed: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('An error occurred during registration.');
+            }
+        });
     }
-  });
 </script>
+    
 
 </body>
 </html>

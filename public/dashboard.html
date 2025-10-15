@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -239,7 +239,7 @@
         <a href="internship.html">Internship</a>
         <a href="home.html">Logout</a>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
-    <style>
+     <style>
         .chat-widget {
             position: fixed;
             bottom: 20px;
@@ -442,8 +442,8 @@
                 sendMessage();
             }
         }
-    </script>
-    </div>
+    </script> 
+     </div>
 
     <div class="main-content">
         <div class="header">
@@ -467,11 +467,11 @@
             </div>
         </div>
         
-        <h3>Your Skills:</h3>
+         <h3>Your Skills:</h3>
         <ul id="skillsList"></ul>
         <input type="text" id="newSkills" placeholder="Add new skills (comma-separated)">
-        <button onclick="updateSkills()">Update Skills</button>
-        
+        <button onclick="updateSkills()">Update Skills</button> -->
+<!--         
         
         <div class="cards">
             <div class="card">
@@ -653,47 +653,47 @@
     } catch (error) {
         console.error("❌ Error fetching user data:", error);
     }
-});
+});  -->
 
-async function updateSkills() {
-    const userName = localStorage.getItem("userName"); // Retrieve user name
+<!-- // async function updateSkills() {
+//     const userName = localStorage.getItem("userName"); // Retrieve user name
 
-    if (!userName) {
-        alert("❌ Error: User name not found in local storage.");
-        return;
-    }
+//     if (!userName) {
+//         alert("❌ Error: User name not found in local storage.");
+//         return;
+//     }
 
-    const skillsInput = document.getElementById("newSkills").value.trim(); // Get input value
+//     const skillsInput = document.getElementById("newSkills").value.trim(); // Get input value
 
-    if (!skillsInput) {
-        alert("⚠️ Please enter at least one skill.");
-        return;
-    }
+//     if (!skillsInput) {
+//         alert("⚠️ Please enter at least one skill.");
+//         return;
+//     }
 
-    try {
-        const response = await fetch("/updateSkills", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: userName, skills: skillsInput.split(",") }) // Send name, not email
-        });
+//     try {
+//         const response = await fetch("/updateSkills", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({ name: userName, skills: skillsInput.split(",") }) // Send name, not email
+//         });
 
-        const result = await response.json();
-        alert(result.message || "✅ Skills updated successfully!");
+//         const result = await response.json();
+//         alert(result.message || "✅ Skills updated successfully!");
 
-        // Refresh skill list after updating
-        document.getElementById("skillsList").innerHTML = skillsInput
-            .split(",")
-            .map(skill => `<li>${skill.trim()}</li>`)
-            .join("");
+//         // Refresh skill list after updating
+//         document.getElementById("skillsList").innerHTML = skillsInput
+//             .split(",")
+//             .map(skill => `<li>${skill.trim()}</li>`)
+//             .join("");
 
-    } catch (error) {
-        console.error("❌ Error updating skills:", error);
-    }
-}
-document.getElementById("notification-icon").addEventListener("click", async () => {
-    const box = document.getElementById("notification-box");
-    box.style.display = box.style.display === "block" ? "none" : "block";
-});
+//     } catch (error) {
+//         console.error("❌ Error updating skills:", error);
+//     }
+// }
+// document.getElementById("notification-icon").addEventListener("click", async () => {
+//     const box = document.getElementById("notification-box");
+//     box.style.display = box.style.display === "block" ? "none" : "block";
+// });
 
     
 </script>
@@ -701,4 +701,583 @@ document.getElementById("notification-icon").addEventListener("click", async () 
     
 </body>
 
+</html> -->
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TalentNest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-purple: #7b2cbf;
+            --primary-purple-light: #f4e9ff;
+            --background-color: #f7f8fc;
+            --card-background: #ffffff;
+            --text-dark: #333333;
+            --text-light: #888888;
+            --border-color: #e8e8e8;
+            --stat-1: #e0d1ff;
+            --stat-2: #ffdeeb;
+            --stat-3: #d1f3ff;
+            --stat-4: #fff0d1;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: var(--background-color);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 150px;
+            background-color: var(--card-background);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            display: flex; align-items: center;
+            gap: 10px; margin-bottom: 40px;
+        }
+        .sidebar-header .logo-icon {
+            width: 40px; height: 40px;
+            background-color: var(--primary-purple);
+            border-radius: 8px; color: white;
+            display: grid; place-items: center;
+            font-size: 1.5rem;
+        }
+        .sidebar-header h2 {
+            margin: 0; font-size: 1.2rem;
+            color: var(--primary-purple);
+        }
+
+        .nav-menu ul { list-style: none; padding: 0; margin: 0; }
+        .nav-menu li a {
+            display: flex; align-items: center;
+            gap: 15px; padding: 15px;
+            border-radius: 8px; text-decoration: none;
+            color: var(--text-light); font-weight: 500;
+            margin-bottom: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .nav-menu li a.active, .nav-menu li a:hover {
+            background-color: var(--primary-purple); color: white;
+        }
+        .nav-menu li a i { width: 20px; text-align: center; }
+
+        .invite-friend {
+            margin-top: auto;
+            background-color: white;
+            padding: 20px; border-radius: 10px;
+            text-align: center;
+        }
+        .invite-friend img { width: 100px; margin-bottom: 10px; }
+        .invite-friend h4 { margin: 0 0 10px 0; }
+        .invite-friend .get-link-btn {
+            background: var(--primary-purple); color: white;
+            border: none; padding: 10px 20px;
+            border-radius: 8px; cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex-grow: 1; padding: 20px;
+            display: flex; gap: 20px;
+            overflow: hidden;
+        }
+        
+        .content-area {
+            flex-grow: 1; display: flex;
+            flex-direction: column; gap: 20px;
+            overflow-y: auto; /* This is the only scrollable area */
+        }
+
+        /* Header Bar */
+        .header-bar {
+            display: flex; justify-content: space-between;
+            align-items: center; flex-shrink: 0;
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-left img { width: 50px; height: 50px; border-radius: 50%; }
+        .header-left h3 { margin: 0; font-weight: 600; }
+
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .search-bar input {
+            padding: 10px 15px; border-radius: 8px;
+            border: 1px solid var(--border-color); width: 250px;
+        }
+        .header-right .icons { display: flex; align-items: center; gap: 15px; }
+        .header-right .icons i { font-size: 1.2rem; color: var(--text-light); cursor: pointer; }
+        
+        /* Stats Cards */
+        .stats-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .stat-card { background-color: var(--card-background); padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .stat-card .icon { font-size: 1.5rem; width: 30px; height: 10px; border-radius: 4px; display: grid; place-items: center; margin-bottom: 15px; }
+        .stat-card:nth-child(1) .icon { background-color: var(--stat-1); color: #5a189a; }
+        .stat-card:nth-child(2) .icon { background-color: var(--stat-2); color: #c9184a; }
+        .stat-card:nth-child(3) .icon { background-color: var(--stat-3); color: #0077b6; }
+        .stat-card:nth-child(4) .icon { background-color: var(--stat-4); color: #fca311; }
+        .stat-card h3 { margin: 0; font-size: 1rem; color: var(--text-light); }
+        .stat-card .number { font-size: 1rem; font-weight: 700; margin: 5px 0 0 0; }
+        
+        /* Database Table */
+        .database-table { background-color: var(--card-background); padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .table-header h3 { margin: 0; }
+        .table-tabs { display: flex; gap: 5px; background-color: #f0f0f0; padding: 5px; border-radius: 8px; }
+        .table-tabs button { padding: 8px 15px; border: none; background-color: transparent; border-radius: 6px; font-weight: 500; cursor: pointer; }
+        .table-tabs button.active { background-color: var(--card-background); color: var(--primary-purple); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { font-size: 0.9rem; color: var(--text-light); }
+        .student-name { display: flex; align-items: center; gap: 10px; }
+        .student-name img { width: 30px; height: 30px; border-radius: 50%; }
+        .status-pass { color: #2a9d8f; background-color: #e0f2f1; padding: 5px 10px; border-radius: 5px; font-weight: 600; font-size: 0.8rem;}
+        .status-fail { color: #e76f51; background-color: #ffe8e2; padding: 5px 10px; border-radius: 5px; font-weight: 600; font-size: 0.8rem;}
+
+        /* --- Bottom Widgets Grid --- */
+        .bottom-widgets-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .widget-card {
+            background-color: var(--card-background); padding: 20px;
+            border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column;
+        }
+
+        /* Upcoming Activities Card */
+        .upcoming-activities h3 { margin: 0 0 20px 0; }
+        .activity-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .activity-item:last-child { margin-bottom: 0; }
+        .date-box { 
+            width: 40px; height: 40px; 
+            background-color: var(--primary-purple-light); color: var(--primary-purple);
+            border-radius: 8px; display: grid;
+            place-items: center; font-weight: 600;
+            flex-shrink: 0;
+        }
+        .details p { margin: 0; font-weight: 500; font-size: 0.9rem; }
+        .details small { color: var(--text-light); font-size: 0.8rem; }
+
+        /* Course Activities Card */
+        .course-activities h3 { margin: 0 0 15px 0; }
+        .chart-container { display: flex; align-items: center; justify-content: center; gap: 20px; flex-grow: 1; }
+        .legend { display: flex; flex-direction: column; gap: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.9rem;}
+        .legend-item .dot { width: 8px; height: 8px; border-radius: 50%; }
+        
+        /* Statistics Chart Card (Now in Right Column) */
+        .statistics-chart { display: flex; flex-direction: column; }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .chart-header h3 { margin: 0; }
+        .chart-header select { padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.8rem; }
+        .chart-canvas-container { flex-grow: 1; position: relative; min-height: 200px; }
+
+        /* --- Right Column (Calendar and Notices) --- */
+        .right-column {
+            width: 400px; display: flex;
+            flex-direction: column; gap: 20px;
+            flex-shrink: 0;
+            overflow-y: auto; /* THIS IS THE FIX */
+        }
+
+        .calendar, .notice-board {
+            background-color: var(--card-background); padding: 20px;
+            border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .calendar-header h3 { margin: 0; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; gap: 10px; }
+        .calendar-grid div { padding: 5px; font-weight: 500; }
+        .calendar-day { cursor: pointer; border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center; margin: 0 auto; }
+        .day-name { color: var(--text-light); font-size: 0.8rem; }
+        .today { background-color: var(--primary-purple); color: white; }
+        
+        .notice-board h3 { margin: 0 0 20px 0; }
+        .notice-item { display: flex; gap: 15px; margin-bottom: 15px; }
+        .notice-item img { width: 50px; height: 50px; border-radius: 8px; }
+        .notice-info h4 { margin: 0 0 5px 0; font-size: 0.9rem; }
+        .notice-info p { margin: 0; font-size: 0.8rem; color: var(--text-light); }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            body { flex-direction: column; height: auto; overflow: auto;}
+            .sidebar { width: 100%; flex-direction: row; justify-content: space-between; height: auto; padding: 10px 20px; box-sizing: border-box;}
+            .nav-menu ul { display: flex; gap: 5px;}
+            .nav-menu li a { padding: 10px 15px; }
+            .invite-friend, .sidebar-header h2 { display: none; }
+            .main-content { flex-direction: column; overflow: visible; }
+            .right-column { width: 100%; flex-direction: row; gap: 20px; overflow-y: visible;}
+            .calendar, .notice-board, .statistics-chart { flex: 1; }
+            .stats-cards { grid-template-columns: repeat(2, 1fr); }
+            .bottom-widgets-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .stats-cards, .right-column { grid-template-columns: 1fr; flex-direction: column; }
+            .header-bar { flex-direction: column; gap: 15px; align-items: flex-start; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div>
+            <div class="sidebar-header">
+                <div class="logo-icon">T</div>
+                <h2>TalentNest</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="#" class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="certificate.html"><i class="fas fa-award"></i>Certificate</a></li>
+                    <li><a href="courses.html"><i class="fas fa-book"></i>Courses</a></li>
+                    <li><a href="job.html"><i class="fas fa-briefcase"></i>Job</a></li>
+                    <li><a href="internship.html"><i class="fas fa-building"></i>Internship</a></li>
+                    <li><a href="test-webcam/index.html"><i class="fas fa-sign-out-alt"></i>Test</a></li>
+                    <li><a href="Alumni/index-vanilla.html"><i class="fas fa-sign-out-alt"></i>Alumni</a></li>
+                    <li><a href="home.html"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="invite-friend">
+            <img src="img/academic.jpg" alt="Invite Friend">
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-area">
+            <header class="header-bar">
+                <div class="header-left">
+                    <img id="profile-image" src="https://i.pravatar.cc/150?img=1" alt="Profile Picture">
+                    <h3>Welcome, <span id="student-name">Student</span></h3>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search Courses, Documents, Activities">
+                    </div>
+                    <div class="icons">
+                        <i class="fas fa-bell"></i>
+                        <i class="fas fa-cog"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-user-graduate"></i></div>
+                    <h3>Total Students</h3>
+                    <p class="number">1220</p>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <h3>Total Jobs</h3>
+                    <p class="number">120</p>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-book-open"></i></div>
+                    <h3>Total Courses</h3>
+                    <p class="number">15</p>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-users"></i></div>
+                    <h3>Total Internship</h3>
+                    <p class="number">100</p>
+                </div>
+            </div>
+            
+            <!-- Database Table -->
+            <div class="database-table">
+                <div class="table-header">
+                    <h3>Database</h3>
+                    <div class="table-tabs">
+                        
+                        <button class="active">Student</button>
+                        
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student name</th>
+                            <th>Score</th>
+                            <th>Submitted</th>
+                            <th>Grade</th>
+                            <th>Pass/Fail</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-table-body">
+                        <!-- Student rows will be injected here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bottom Widgets Grid Section -->
+            <div class="bottom-widgets-grid">
+                <!-- Upcoming Activities -->
+                <div class="widget-card upcoming-activities">
+                    <h3>Upcoming Activities</h3>
+                    <div class="activity-item">
+                        <div class="date-box">31</div>
+                        <div class="details">
+                            <p>Attending Webinar</p>
+                            <small>Software Quality Assurance</small>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="date-box">02</div>
+                        <div class="details">
+                            <p>Quiz of 36(A) Batch</p>
+                            <small>Data Communication</small>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="date-box">05</div>
+                        <div class="details">
+                            <p>Meeting with VC</p>
+                            <small>Course Development</small>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="date-box">10</div>
+                        <div class="details">
+                            <p>Research Work</p>
+                            <small>Machine Learning (ML)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Activities -->
+                <div class="widget-card course-activities">
+                    <h3>Course Activities</h3>
+                    <div class="chart-container">
+                        <canvas id="courseActivitiesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <aside class="right-column">
+            <!-- Calendar -->
+            <div class="calendar">
+                <div class="calendar-header">
+                    <h3 id="month-year"></h3>
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Calendar days will be injected here -->
+                </div>
+            </div>
+            
+            <!-- Notice Board -->
+            <div class="notice-board">
+                <h3>Important Announcement</h3>
+                <div class="notice-item">
+                    <img src="https://images.pexels.com/photos/207691/pexels-photo-207691.jpeg?auto=compress&cs=tinysrgb&w=100" alt="Notice">
+                    <div class="notice-info">
+                        <h4>Special Examinations</h4>
+                        <p>By - Faculty</p>
+                    </div>
+                </div>
+                 <div class="notice-item">
+                    <img src="https://images.pexels.com/photos/1595385/pexels-photo-1595385.jpeg?auto=compress&cs=tinysrgb&w=100" alt="Notice">
+                    <div class="notice-info">
+                        <h4>Semester Admission</h4>
+                        <p>By - HOD</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Chart -->
+            <div class="widget-card statistics-chart">
+                <div class="chart-header">
+                    <h3>Statistics</h3>
+                    <select>
+                        <option value="yearly">Yearly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+                <div class="chart-canvas-container">
+                    <canvas id="statisticsChart"></canvas>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            
+            // --- DYNAMIC CALENDAR ---
+            const monthYearEl = document.getElementById('month-year');
+            const calendarGridEl = document.getElementById('calendar-grid');
+            const today = new Date();
+            const month = today.getMonth();
+            const year = today.getFullYear();
+            const date = today.getDate();
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
+            monthYearEl.textContent = `${monthNames[month]} ${year}`;
+
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            dayNames.forEach(name => {
+                const dayNameEl = document.createElement('div');
+                dayNameEl.classList.add('day-name');
+                dayNameEl.textContent = name;
+                calendarGridEl.appendChild(dayNameEl);
+            });
+            
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                const emptyCell = document.createElement('div');
+                calendarGridEl.appendChild(emptyCell);
+            }
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayEl = document.createElement('div');
+                dayEl.textContent = i;
+                dayEl.classList.add('calendar-day');
+                if (i === date) {
+                    dayEl.classList.add('today');
+                }
+                calendarGridEl.appendChild(dayEl);
+            }
+
+            // --- STATISTICS CHART (BAR) ---
+            const ctxBar = document.getElementById('statisticsChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri'],
+                    datasets: [{
+                        label: 'Statistics',
+                        data: [220, 500, 350, 700, 550, 600],
+                        backgroundColor: [
+                            '#e0d1ff', '#e0d1ff', '#e0d1ff',
+                            '#7b2cbf', '#e0d1ff', '#e0d1ff'
+                        ],
+                        borderRadius: 8,
+                        barThickness: 15
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { display: false } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+             // --- COURSE ACTIVITIES CHART (DOUGHNUT) ---
+            const ctxDoughnut = document.getElementById('courseActivitiesChart').getContext('2d');
+            new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [75, 25],
+                        backgroundColor: ['#7b2cbf', '#e0d1ff'],
+                        borderWidth: 0,
+                    }]
+                },
+                options: {
+                    cutout: '75%',
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: { enabled: false },
+                        legend: { 
+                            display: true,
+                            position: 'right',
+                            labels: {
+                                boxWidth: 10,
+                                padding: 15,
+                                generateLabels: function(chart) {
+                                    return [
+                                        { text: 'Process', fillStyle: '#7b2cbf' },
+                                        { text: 'In process', fillStyle: '#e0d1ff' }
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+// Fetch 'name' from the URL
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const studentName = urlParams.get('name');
+  const gender = urlParams.get('gender'); // Get gender from URL
+
+  if (studentName) {
+    document.getElementById('student-name').innerText = studentName;
+  }
+
+  const profileImage = document.getElementById('profile-image');
+  if (gender === 'female') {
+    profileImage.src = 'https://cdn-icons-png.flaticon.com/512/6997/6997662.png'; // Dummy girl icon
+  } else if (gender === 'male') {
+    profileImage.src = 'https://cdn-icons-png.flaticon.com/512/2922/2922510.png'; // Dummy boy icon
+  } else {
+    profileImage.src = 'https://cdn-icons-png.flaticon.com/512/847/847969.png'; // Default icon
+  }
+
+            // --- DYNAMIC STUDENT DATABASE TABLE ---
+            const studentData = [
+                { name: 'Glenn Maxwell', score: 80, submitted: '12/10/22-10 PM', grade: 'Excellent', status: 'Pass', img: 'https://i.pravatar.cc/150?img=3' },
+                { name: 'Cathe Heavan', score: 70, submitted: '12/10/22-10 PM', grade: 'Average', status: 'Pass', img: 'https://i.pravatar.cc/150?img=5' },
+                { name: 'Yeadar Gil', score: 35, submitted: '12/10/22-10 PM', grade: 'Poor', status: 'Fail', img: 'https://i.pravatar.cc/150?img=7' },
+                { name: 'Preeth Shing', score: 80, submitted: '12/10/22-10 PM', grade: 'Excellent', status: 'Pass', img: 'https://i.pravatar.cc/150?img=8' }
+            ];
+
+            const tableBody = document.getElementById('student-table-body');
+
+            function renderTable(data) {
+                tableBody.innerHTML = ''; // Clear existing rows
+                data.sort((a, b) => b.score - a.score); // Sort by score descending
+                
+                data.forEach(student => {
+                    const row = `
+                        <tr>
+                            <td><div class="student-name"><img src="${student.img}" alt="${student.name}"><span>${student.name}</span></div></td>
+                            <td>${student.score}/100</td>
+                            <td>${student.submitted}</td>
+                            <td>${student.grade}</td>
+                            <td><span class="status-${student.status.toLowerCase()}">${student.status}</span></td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            }
+
+            renderTable(studentData); // Initial render
+
+        });
+    </script>
+</body>
 </html>
+

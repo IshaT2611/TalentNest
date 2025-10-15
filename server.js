@@ -1,185 +1,64 @@
+// server.js
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 const dotenv = require("dotenv");
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const path = require('path');
-const bodyParser = require('body-parser');
+const path = require("path");
 
-//import your routes and models
-const studentRoutes = require('./routes/studentRoutes');
-const User = require('./models/User');
-const Admin = require('./models/Admin');
-const adminRoutes = require('./routes/adminRoutes');
-
+// Load environment variables
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
-app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Database Connection
-mongoose.connect('mongodb://127.0.0.1:27017/edulinkDB', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log(err));
+// Serve static frontend
+app.use(express.static(path.join(__dirname, "public")));
+app.use('/admin',express.static(path.join(__dirname, "admin")));
 
+// Import Routes
+const adminRoutes = require("./routes/adminRoutes");
+const studentRoutes = require("./routes/studentRoutes");
+const applicationRoutes = require("./routes/applicationRoutes"); // ✅ ADD THIS
+const internshipRoutes = require("./routes/internshipRoutes"); // ✅ ADD THIS LINE
 
-//route for homepage
-app.get('/', (req, res) => {
-    res.send('Welcome to EduLink Backend!');
-
-});
-// Admin Routes - this should come AFTER app is initialized!
-app.use('/admin', adminRoutes);
-
-// Serve frontend files from "frontend" folder
-app.use(express.static(path.join(__dirname, 'public')));
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'home.html'));
-});
-// Serve admin folder statically
-app.use('/admin', express.static(__dirname + '/admin'));
-app.get('/admin/home.html', (req, res) => {
-  res.sendFile(__dirname + '/admin/home.html');
+// Use Routes
+app.post('/api/students/login', async (req, res) => {
+    const { email, password } = req.body;
+    // your login logic here
+    res.json({ message: 'Login successful', data: { studentId: 123 } });
 });
 
-// Registration Route
+app.use("/api/admin", adminRoutes);
+app.use("/api/student", studentRoutes);
+app.use("/api/applications", applicationRoutes);
+app.use("/api/internships", internshipRoutes); // ✅ AND ADD THIS LINE
 
-app.post('/register', async (req, res) => {
-  const { name, email, password, gender, skills } = req.body;
+// MongoDB connection
+const mongoURI =
+  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/talentnest";
+mongoose
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
-  try {
-       let skillsArray = [];
-
-    if (typeof skills === 'string') {
-      skillsArray = skills.split(',').map(skill => skill.trim());
-    } else if (Array.isArray(skills)) {
-      skillsArray = skills;
-    }
-
-
-      const newUser = new User({ name, email, password, gender, skills: skillsArray });
-      await newUser.save();
-      
-      console.log("✅ Registration successful:", newUser);
-       console.log("✅ Sending JSON response to frontend...");
-    res.status(200).json({ message: "Registration successful!" });
-
-  } catch (err) {
-      console.error("❌ Registration Failed:", err);
-      res.status(400).send(`Registration Failed: ${err.message}`);
-  }
+// Default routes
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-
-  
-// Login Route
-
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-      const user = await User.findOne({ email });
-
-      if (!user || user.password !== password) {
-          return res.send('Invalid Email or Password');
-      }
-
-      // If credentials are correct
-      res.redirect(`/dashboard?name=${user.name}&gender=${user.gender}`);
-
-  } catch (err) {
-      res.send('Server Error');
-  }
-});
-
-app.get('/getUser/:name', async (req, res) => {
-  const userName = req.params.name;
-
-  try {
-      const user = await User.findOne({ name: userName });
-
-      if (!user) {
-          return res.status(404).json({ error: "User not found!" });
-      }
-
-      res.json(user);
-
-  } catch (error) {
-      console.error("❌ Error fetching user:", error);
-      res.status(500).json({ error: "Server error while fetching user" });
-  }
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin', 'adminLogin.html'));
 });
 
 
-
-// Serve the dashboard.html file
-app.get("/dashboard", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "dashboard.html"));
+// Test endpoint
+app.get("/api/data", (req, res) => {
+  res.json({ message: "Server is running fine!" });
 });
 
-
-
-app.post('/updateSkills', async (req, res) => {
-  try {
-    const { name, skills } = req.body;
-
-    if (!name || !skills) {
-        return res.status(400).json({ error: "❌ Name and skills are required!" });
-    }
-
-    const user = await User.findOne({ name });  // ✅ Works fine now
-
-    if (!user) {
-        return res.status(404).json({ error: "User not found!" });
-    }
-
-    const skillsArray = Array.isArray(skills) ? skills : skills.split(',').map(skill => skill.trim());
-
-    const updatedUser = await User.findOneAndUpdate(
-      { name }, 
-      { $set: { skills: skillsArray } },
-      { new: true }  // Returns the updated document
-    );
-    console.log("✅ Updated user:", updatedUser);
-
-    console.log("✅ Skills Updated Successfully:", user);
-    res.json({ message: "✅ Skills updated successfully!" });
-
-} catch (error) {
-    console.error("❌ Error updating skills:", error);
-    res.status(500).json({ error: "Error updating skills" });
-    
-}
-});
-  
-
-
-
-
-//route to open html pages
-app.get('/admin/register.html', (req, res) => {
-  res.sendFile(__dirname + '/admin/adminRegister.html');
-});
-
-app.get('/admin/login.html', (req, res) => {
-  res.sendFile(__dirname + '/admin/adminLogin.html');
-});
-
-// Example API Endpoint
-app.get('/api/data', (req, res) => {
-    res.json({ message: 'Backend connected successfully!' });
-});
-
-
-
-// Start Server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-})
+// Start server
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

@@ -4,51 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Internship Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #c1dbffb6;
-            min-height: 100vh;
+     :root {
+            --primary-purple: #7b2cbf;
+            --primary-purple-light: #f4e9ff;
         }
 
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        display: flex;
+        height: 100vh;
+        background-color: #f7fafc;
+    }
+    
+ /* --- Sidebar --- */
         .sidebar {
-            width: 250px;
-            background-color: #5a67d8;
-            color: white;
+            width: 200px;
+            background-color: var(--card-background);
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            padding-top: 20px;
-            height: 100vh;
-            position: absolute;
-            left: 0;
+            border-right: 1px solid var(--border-color);
+            flex-shrink: 0;
         }
 
-        .sidebar h2 {
+        .sidebar-header {
+            display: flex; align-items: center;
+            gap: 10px; margin-bottom: 40px;
+        }
+        .sidebar-header .logo-icon {
+            width: 40px; height: 40px;
+            background-color: var(--primary-purple);
+            border-radius: 8px; color: white;
+            display: grid; place-items: center;
+            font-size: 1.5rem;
+        }
+        .sidebar-header h2 {
+            margin: 0; font-size: 1.2rem;
+            color: var(--primary-purple);
+        }
+
+        .nav-menu ul { list-style: none; padding: 0; margin: 0; }
+        .nav-menu li a {
+            display: flex; align-items: center;
+            gap: 15px; padding: 15px;
+            border-radius: 8px; text-decoration: none;
+            color: var(--text-light); font-weight: 500;
+            margin-bottom: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .nav-menu li a.active, .nav-menu li a:hover {
+            background-color: var(--primary-purple); color: white;
+        }
+        .nav-menu li a i { width: 20px; text-align: center; }
+
+        .invite-friend {
+            margin-top: auto;
+            background-color: white;
+            padding: 20px; border-radius: 10px;
             text-align: center;
-            margin-bottom: 40px;
         }
-
-        .sidebar a {
-            text-decoration: none;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            display: block;
-            font-size: 18px;
+        .invite-friend img { width: 100px; margin-bottom: 10px; }
+        .invite-friend h4 { margin: 0 0 10px 0; }
+        .invite-friend .get-link-btn {
+            background: var(--primary-purple); color: white;
+            border: none; padding: 10px 20px;
+            border-radius: 8px; cursor: pointer;
+            font-weight: 600;
         }
-
-        .sidebar a:hover {
-            background-color: #434190;
-        }
+       
 
         /* Main content styles */
         .main-content {
@@ -59,6 +93,7 @@
             align-items: center;
             flex-direction: column;
             min-height: 100vh;
+            background-color:#c1dbffb6;
         }
 
         .header {
@@ -126,16 +161,30 @@
 
 <body>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>EduLink</h2>
-        <a href="dashboard.html">Home</a>
-        <a href="certificate.html">Certificate</a>
-        <a href="courses.html">Courses</a>
-        <a href="job.html">Job</a>
-        <a href="#">Internship</a>
-        <a href="home.html">Logout</a>
-    </div>
+   <aside class="sidebar">
+        <div>
+            <div class="sidebar-header">
+                <div class="logo-icon">T</div>
+                <h2>TalentNest</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="dashboard.html" class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="certificate.html"><i class="fas fa-award"></i>Certificate</a></li>
+                    <li><a href="courses.html"><i class="fas fa-book"></i>Courses</a></li>
+                    <li><a href="job.html"><i class="fas fa-briefcase"></i>Job</a></li>
+                    <li><a href="internship.html"><i class="fas fa-building"></i>Internship</a></li>
+                    <li><a href="test-webcam/index.html"><i class="fas fa-sign-out-alt"></i>Test</a></li>
+                    <li><a href="Alumni/index-vanilla.html"><i class="fas fa-sign-out-alt"></i>Alumni</a></li>
+                    <li><a href="home.html"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="invite-friend">
+            <img src="img/academic.jpg" alt="Invite Friend">
+            
+        </div>
+    </aside>
 
     <!-- Main content -->
     <div class="main-content">
