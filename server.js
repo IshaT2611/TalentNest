@@ -48,7 +48,7 @@ mongoose
 
 // Default routes
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "public", "home.html"));
 });
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin', 'adminLogin.html'));
