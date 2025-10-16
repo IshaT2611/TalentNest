@@ -212,7 +212,7 @@
 
 <div class="container" id="container">
     <div class="form-container sign-up-container">
-        <form action="/api/admin/signup" method="POST">
+        <form id="adminSignUpForm" action="/api/admin/signup" method="POST">
             <h1>Create Account</h1>
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="email" placeholder="Enter your Email" required>
@@ -246,27 +246,72 @@
         </div>
     </div>
 </div>
-
 <script>
-   document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = e.target.email.value;
-  const password = e.target.password.value;
+    // --- Code to toggle between Sign In and Sign Up panels ---
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    const container = document.getElementById('container');
+    const adminSignUpForm = document.getElementById('adminSignUpForm');
+    const adminLoginForm = document.getElementById('adminLoginForm');
 
-  const res = await fetch('/api/admin/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
-  });
+    signUpButton.addEventListener('click', () => {
+        container.classList.add("right-panel-active");
+    });
 
-  const data = await res.json();
-  if (data.message === "Admin login successful!") {
-    window.location.href = `/admin/home.html?name=${data.admin.username}`;
-  } else {
-    alert(data.message);
-  }
-});
+    signInButton.addEventListener('click', () => {
+        container.classList.remove("right-panel-active");
+    });
+
+    // --- NEW: Code to handle the Sign Up form submission ---
+    adminSignUpForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // <-- This is the most important part!
+        
+        const username = e.target.username.value;
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+
+        const res = await fetch('/api/admin/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await res.json();
+
+        // Check the message from the server
+        if (data.message === "Admin registered successfully!") {
+            alert("Registration Successful! Please sign in.");
+            adminSignUpForm.reset(); // Clear the form fields
+            container.classList.remove("right-panel-active"); // Switch to the sign-in panel
+        } else {
+            // Show any other message from the server (e.g., "User already exists")
+            alert(data.message);
+        }
+    });
+
+    // --- Your existing code to handle the Sign In form ---
+    adminLoginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        // You also have a username field here you might need
+        const username = e.target.username.value;
+
+        const res = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, username })
+        });
+
+        const data = await res.json();
+        if (data.message === "Admin login successful!") {
+            window.location.href = `/admin/home.html?name=${data.admin.username}`;
+        } else {
+            alert(data.message);
+        }
+    });
 </script>
+
 
 </body>
 </html>
