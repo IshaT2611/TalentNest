@@ -9,11 +9,12 @@ const statusOverlay = document.getElementById('status-overlay');
 const warningSound = document.getElementById('warning-sound');
 
 // --- State variables to manage the test ---
-let detector; // This will hold the AI model
+let detector;
 let warningsLeft = 3;
 let timerInterval;
 let detectionInterval;
-let isWarningCooldown = false; // Prevents spamming warnings
+let isWarningCooldown = false;
+let isTestActive = false; // NEW: State to check if the test is running
 
 // --- Event Listener to start the test ---
 startBtn.addEventListener('click', () => {
@@ -23,45 +24,69 @@ startBtn.addEventListener('click', () => {
 });
 
 /**
- * Initializes the timer, camera, and AI detector.
+ * Initializes the timer, camera, AI detector, and new proctoring features.
  */
 async function startTest() {
-    startTimer(30 * 60); // 30 minutes in seconds
+    isTestActive = true;
+    startTimer(30 * 60);
+
+    // NEW FEATURE: Request full screen when the test starts
+    document.documentElement.requestFullscreen().catch(err => {
+        alert(`Error enabling full-screen: ${err.message}. Please enable it manually.`);
+    });
+
+    // NEW FEATURE: Add event listeners for the new checks
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('fullscreenchange', handleFullScreenChange);
+
     await setupCameraAndDetector();
-    if (detector) { // Only start detection if the AI model loaded successfully
+    if (detector) {
         runDetection();
     }
 }
+
+// --- NEW FEATURE: Handlers for tab focus and full-screen events ---
+
+/**
+ * Triggers a warning if the user switches tabs or minimizes the window.
+ */
+function handleVisibilityChange() {
+    if (document.hidden && isTestActive) {
+        triggerWarning("Tab switch detected.");
+    }
+}
+
+/**
+ * Triggers a warning if the user exits full-screen mode.
+ */
+function handleFullScreenChange() {
+    if (!document.fullscreenElement && isTestActive) {
+        triggerWarning("Exited full-screen mode.");
+    }
+}
+
 
 /**
  * Sets up the webcam and loads the TensorFlow.js face detection model.
  */
 async function setupCameraAndDetector() {
     try {
-        // Access the user's webcam
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false
-        });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
         video.srcObject = stream;
-        await new Promise((resolve) => {
-            video.onloadedmetadata = resolve;
-        });
+        await new Promise((resolve) => { video.onloadedmetadata = resolve; });
 
-        // Configure the AI detector
         const detectorConfig = {
             runtime: 'mediapipe',
             solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh',
         };
         detector = await faceLandmarksDetection.createDetector(
-            faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh, 
+            faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh,
             detectorConfig
         );
-
         console.log("Proctoring system initialized successfully.");
     } catch (err) {
         console.error("Error initializing proctoring system:", err);
-        alert("Could not initialize the proctoring system. Please ensure you have given camera permissions and have a stable internet connection. Refresh the page to try again.");
+        alert("Could not initialize the proctoring system. Please check permissions and refresh.");
     }
 }
 
@@ -70,15 +95,12 @@ async function setupCameraAndDetector() {
  */
 async function runDetection() {
     detectionInterval = setInterval(async () => {
-        if (!detector) return;
-
+        if (!detector || !isTestActive) return;
         try {
             const faces = await detector.estimateFaces(video, { flipHorizontal: false });
-
             let violationDetected = false;
             let reason = 'OK';
 
-            // --- VIOLATION CHECKS ---
             if (faces.length === 0) {
                 violationDetected = true;
                 reason = "No person detected.";
@@ -87,28 +109,24 @@ async function runDetection() {
                 reason = "Multiple people detected.";
             } else {
                 const keypoints = faces[0].keypoints;
-                const nose = keypoints.find(point => point.name === 'noseTip');
-                const leftEye = keypoints.find(point => point.name === 'leftEye');
-                const rightEye = keypoints.find(point => point.name === 'rightEye');
-
+                const nose = keypoints.find(p => p.name === 'noseTip');
+                const leftEye = keypoints.find(p => p.name === 'leftEye');
+                const rightEye = keypoints.find(p => p.name === 'rightEye');
                 if (nose && leftEye && rightEye) {
-                    // Check if user is looking down
                     if (nose.y > (leftEye.y + rightEye.y) / 2) {
                         violationDetected = true;
                         reason = "User looking down.";
                     }
-                    // Check if user is looking away
                     const eyeCenter = (leftEye.x + rightEye.x) / 2;
-                    const horizontalDist = Math.abs(nose.x - eyeCenter);
+                    const hDist = Math.abs(nose.x - eyeCenter);
                     const eyeWidth = Math.abs(leftEye.x - rightEye.x);
-                    if (horizontalDist / eyeWidth > 0.35) { // Threshold for looking away
+                    if (hDist / eyeWidth > 0.35) {
                         violationDetected = true;
-                        reason = "User looking away from screen.";
+                        reason = "User looking away.";
                     }
                 }
             }
-            
-            // --- Trigger warning or update status ---
+
             if (violationDetected) {
                 triggerWarning(reason);
             } else {
@@ -118,25 +136,21 @@ async function runDetection() {
         } catch (error) {
             console.error("Error during face detection:", error);
         }
-    }, 1000); // Check every second
+    }, 1000);
 }
 
 /**
  * Handles the logic for issuing a warning.
  */
 function triggerWarning(reason) {
-    if (isWarningCooldown) return; // Exit if a warning was recently triggered
-
+    if (isWarningCooldown || !isTestActive) return;
     warningsLeft--;
     warningsDisplay.textContent = `Warnings Left: ${warningsLeft}`;
     statusOverlay.textContent = `WARNING: ${reason}`;
     statusOverlay.className = 'status-warn';
-    
     warningSound.play().catch(e => console.error("Error playing sound:", e));
-
     isWarningCooldown = true;
-    setTimeout(() => { isWarningCooldown = false; }, 3000); // 3-second cooldown
-
+    setTimeout(() => { isWarningCooldown = false; }, 3000);
     if (warningsLeft <= 0) {
         endTest("Test terminated due to too many warnings.");
     }
@@ -146,23 +160,31 @@ function triggerWarning(reason) {
  * Ends the test, stops all processes, and redirects the user.
  */
 function endTest(message) {
+    if (!isTestActive) return; // Prevent this from running multiple times
+    isTestActive = false;
     clearInterval(timerInterval);
     clearInterval(detectionInterval);
 
-    // Stop the camera stream
+    // NEW: Clean up event listeners to prevent memory leaks
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    document.removeEventListener('fullscreenchange', handleFullScreenChange);
+
     const stream = video.srcObject;
     if (stream) {
         stream.getTracks().forEach(track => track.stop());
     }
-    
+
+    // NEW: Exit full screen when the test is over
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    }
+
     alert(message);
-    
-    // ❗ IMPORTANT: Change this to your website's homepage or results page
-    window.location.href = "/"; 
+    window.location.href = "/"; // Redirect to homepage
 }
 
 /**
- * Manages the 30-minute countdown timer.
+ * Manages the countdown timer.
  */
 function startTimer(duration) {
     let timeLeft = duration;
@@ -170,9 +192,7 @@ function startTimer(duration) {
         const minutes = Math.floor(timeLeft / 60);
         let seconds = timeLeft % 60;
         seconds = seconds < 10 ? '0' + seconds : seconds;
-
         timerDisplay.textContent = `Time Left: ${minutes}:${seconds}`;
-        
         if (--timeLeft < 0) {
             endTest("Time is up! Your test has been submitted.");
         }

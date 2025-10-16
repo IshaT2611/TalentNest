@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection"></script>
 </head>
 <body>
@@ -20,10 +18,10 @@
             <p>Please read the following rules carefully before you begin:</p>
             <ul>
                 <li>You have <strong>30 minutes</strong> to complete the test.</li>
-                <li>Your webcam will be active throughout the session for monitoring.</li>
+                <li>The test will start in <strong>full-screen mode</strong>. Exiting full-screen will trigger a warning.</li>
+                <li><strong>Do not switch tabs</strong> or minimize the browser, as this will also be flagged.</li>
+                <li>Your webcam will be active for monitoring.</li>
                 <li>Ensure you are alone in a well-lit room.</li>
-                <li>Do not look away from the screen or down at your desk.</li>
-                <li>If more than one person is detected, it will be flagged as a violation.</li>
             </ul>
             <p class="warning-note">You will receive a warning for any suspicious activity. After <strong>3 warnings</strong>, your test will be automatically submitted.</p>
             <button id="start-btn">I Understand, Start Test</button>
@@ -43,7 +41,8 @@
             </div>
         </div>
         <div class="test-panel">
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScopAipCvKwYyRC8DqZh21pb8Gl2ruvT4qgKb2rTQR1gxuF8w/viewform?embedded=true" width="800" height="800" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+            <iframe id="google-form" src="https://docs.google.com/forms/d/e/1FAIpQLScopAipCvKwYyRC8DqZh21pb8Gl2ruvT4qgKb2rTQR1gxuF8w/viewform?embedded=true" frameborder="0">Loading…</iframe>
+        </div>
     </div>
     
     <audio id="warning-sound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
