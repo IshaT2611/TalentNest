@@ -62,3 +62,4 @@ app.get("/api/data", (req, res) => {
 
 // Start server
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
