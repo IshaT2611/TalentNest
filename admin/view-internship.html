@@ -7,6 +7,27 @@
         body { font-family: 'Poppins', sans-serif; background-color: #f4f7f6; padding: 2rem; }
         .container { max-width: 1200px; margin: auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         h1 { text-align: center; color: #333; }
+        
+        /* 👇 --- NEW STYLES FOR FILTER --- 👇 */
+        .filter-container {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .filter-group { display: flex; flex-direction: column; }
+        .filter-group label { font-size: 0.9em; font-weight: 500; color: #555; margin-bottom: 5px; }
+        .filter-group input { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; width: 120px; }
+        .filter-container button { padding: 9px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.95em; font-weight: 600; margin-top: auto; }
+        .filter-button { background-color: #007bff; color: white; }
+        .clear-button { background-color: #6c757d; color: white; }
+        /* 👆 --- END OF NEW STYLES --- 👆 */
+
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
         th { background-color: #2c7bbf; color: white; }
@@ -18,6 +39,18 @@
 <div class="container">
     <h1>Student Internship Applications</h1>
     
+    <div class="filter-container">
+        <div class="filter-group">
+            <label for="min-cgpa">Minimum CGPA</label>
+            <input type="number" id="min-cgpa" placeholder="E.g., 7.0" step="0.1">
+        </div>
+        <div class="filter-group">
+            <label for="max-cgpa">Maximum CGPA</label>
+            <input type="number" id="max-cgpa" placeholder="E.g., 9.0" step="0.1">
+        </div>
+        <button id="filter-btn" class="filter-button">Filter</button>
+        <button id="clear-filter-btn" class="clear-button">Clear</button>
+    </div>
     <table>
         <thead>
             <tr>
@@ -25,7 +58,9 @@
                 <th>Student Email</th>
                 <th>Branch</th>
                 <th>Year</th>
-                <th>Internship Type</th> <th>Application Date</th>
+                <th>CGPA</th>
+                <th>Internship Type</th> 
+                <th>Application Date</th>
                 <th>Resume</th>
             </tr>
         </thead>
@@ -40,23 +75,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     const tableBody = document.getElementById('internships-tbody');
     const loadingMessage = document.getElementById('loading-message');
 
+    // Filter elements
+    const minCgpaInput = document.getElementById('min-cgpa');
+    const maxCgpaInput = document.getElementById('max-cgpa');
+    const filterBtn = document.getElementById('filter-btn');
+    const clearBtn = document.getElementById('clear-filter-btn');
+
+    let allInternships = []; // Store all internships
+
     try {
-        // Fetch from the NEW internship endpoint
         const response = await fetch('/api/internships');
         if (!response.ok) {
             throw new Error(`Server responded with status: ${response.status}`);
         }
-        const internships = await response.json();
+        allInternships = await response.json();
         
         loadingMessage.style.display = 'none';
+        renderTable(allInternships); // Initial render
 
+    } catch (error) {
+        console.error('Failed to fetch internships:', error);
+        loadingMessage.textContent = 'Error loading applications.';
+        loadingMessage.style.color = 'red';
+    }
+
+    // Function to render the table
+    function renderTable(internships) {
         if (internships.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No internship applications yet.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No internship applications found.</td></tr>'; // colspan is 8 now
             return;
         }
 
         tableBody.innerHTML = '';
-
         internships.forEach(app => {
             const row = document.createElement('tr');
             
@@ -64,22 +114,41 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ? `<a href="/${app.resumePath.replace(/\\/g, '/')}" target="_blank">View Resume</a>`
                 : 'Not Available';
 
+            // 👇 --- ROW HTML UPDATED --- 👇
             row.innerHTML = `
                 <td>${app.studentName || 'N/A'}</td>
                 <td>${app.studentEmail || 'N/A'}</td>
                 <td>${app.branch}</td>
                 <td>${app.yearOfStudy}</td>
-                <td><strong>${app.internshipType}</strong></td> <td>${new Date(app.applicationDate).toLocaleDateString()}</td>
+                <td>${app.CGPA || 'N/A'}</td> <td><strong>${app.internshipType}</strong></td> 
+                <td>${new Date(app.applicationDate).toLocaleDateString()}</td>
                 <td>${resumeLink}</td>
             `;
+            // 👆 --- END --- 👆
             tableBody.appendChild(row);
         });
-
-    } catch (error) {
-        console.error('Failed to fetch internships:', error);
-        loadingMessage.textContent = 'Error loading applications.';
-        loadingMessage.style.color = 'red';
     }
+
+    // Filter button logic
+    filterBtn.addEventListener('click', () => {
+        const minCgpa = parseFloat(minCgpaInput.value) || 0;
+        const maxCgpa = parseFloat(maxCgpaInput.value) || 10; 
+
+        const filteredApps = allInternships.filter(app => {
+            const appCgpa = parseFloat(app.CGPA);
+            if (isNaN(appCgpa)) return false; 
+            return appCgpa >= minCgpa && appCgpa <= maxCgpa;
+        });
+        
+        renderTable(filteredApps);
+    });
+
+    // Clear button logic
+    clearBtn.addEventListener('click', () => {
+        minCgpaInput.value = '';
+        maxCgpaInput.value = '';
+        renderTable(allInternships); // Render the full list again
+    });
 });
 </script>
 

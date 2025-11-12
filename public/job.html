@@ -278,7 +278,38 @@
 
         </div>
     </div>
+<script>
+    window.onload = function() {
+        // 1. Get the container where job cards are a-dded
+        const grid = document.querySelector('.company-grid');
 
+        // 2. Get the saved jobs from localStorage
+        const postedJobs = JSON.parse(localStorage.getItem('postedJobs')) || [];
+
+        // 3. Loop through each saved job and create an HTML card for it
+        postedJobs.forEach(job => {
+            // Create a new div element for the job box
+            const jobBox = document.createElement('div');
+            jobBox.className = 'job-box';
+
+            // Fill the inner HTML of the job box with data from the job object
+            jobBox.innerHTML = `
+          
+                <h3>${job.companyName}</h3>
+                <div class="star-rating">${job.rating}</div>
+                <div class="reviews">${job.reviews}</div>
+                <div class="bio">${job.bio}</div>
+                <a href="details/Aeligible.html?company=${encodeURIComponent(job.companyName)}" class="view-jobs">View jobs</a>
+            `;
+            
+            // Note: The link above now points to ONE eligibility page 
+            // and passes the company name in the URL.
+
+            // 4. Add the new job card to the grid
+            grid.appendChild(jobBox);
+        });
+    };
+</script>
 </body>
 
 </html>

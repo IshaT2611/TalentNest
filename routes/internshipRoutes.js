@@ -1,57 +1,59 @@
 // routes/internshipRoutes.js
 const express = require('express');
 const router = express.Router();
+// This line will now work because you created the file in Step 1
+const InternshipApplication = require('../models/InternshipApplication'); 
+const Student = require('../models/Student'); 
 const multer = require('multer');
 const path = require('path');
-const Internship = require('../models/Internship'); // Our new Internship model
-const Student = require('../models/Student'); // The existing Student model
 
-// --- Multer Storage Configuration (can be the same as for jobs) ---
+// --- Multer Storage Configuration ---
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/resumes/');
+        cb(null, 'uploads/resumes/'); 
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, 'internship-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
-
 const upload = multer({ storage: storage });
 
 // Route to handle NEW internship applications
 router.post('/apply', upload.single('resume'), async (req, res) => {
+    
+    // This will print the form data to your terminal for debugging
+    console.log("Internship form data received (req.body):", req.body);
+
     try {
-        const { email, name, rollDivision, phone, branch, year, internshipType } = req.body;
+        // This line now includes 'cgpa'
+        const { email, name, rollDivision, phone, branch, year, internshipType, cgpa } = req.body;
 
         if (!req.file) {
             return res.status(400).json({ message: "Resume file is required." });
         }
 
-        // --- Find or Create Student Logic ---
         let student = await Student.findOne({ email: email });
-
         if (!student) {
             student = new Student({
                 fullName: name,
                 email: email,
                 username: email.split('@')[0],
-                phoneNumber: phone,
                 rollNumber: rollDivision,
+                phoneNumber: phone,
                 password: "defaultPassword",
-                department: branch,
-                yearOfStudy: year,
+                // ... other student fields
             });
             await student.save();
         }
 
-        // --- Create the Internship Application ---
-        const newInternship = new Internship({
+        const newInternship = new InternshipApplication({
             studentEmail: student.email,
             branch: branch,
             yearOfStudy: year,
             internshipType: internshipType,
-            resumePath: req.file.path
+            resumePath: req.file.path,
+            CGPA: cgpa // This saves the CGPA
         });
 
         await newInternship.save();
@@ -59,32 +61,35 @@ router.post('/apply', upload.single('resume'), async (req, res) => {
 
     } catch (error) {
         console.error("Error submitting internship application:", error);
-        res.status(500).json({ message: "Server error during internship application." });
+        res.status(500).json({ message: "Server error during application." });
     }
 });
 
-// Route for the ADMIN to GET all internship applications
+// Route to GET all internship applications for the admin panel
 router.get('/', async (req, res) => {
     try {
-        const internships = await Internship.aggregate([
+        const internships = await InternshipApplication.aggregate([
             { $sort: { applicationDate: -1 } },
             {
-                $lookup: {
+                $lookup: { 
                     from: 'students',
                     localField: 'studentEmail',
                     foreignField: 'email',
                     as: 'studentDetails'
                 }
             },
-            { $unwind: { path: '$studentDetails', preserveNullAndEmptyArrays: true } },
             {
-                $project: {
+                $unwind: { path: '$studentDetails', preserveNullAndEmptyArrays: true }
+            },
+            {
+                $project: { 
                     _id: 1,
                     branch: 1,
                     yearOfStudy: 1,
-                    internshipType: 1, // We need this field for the admin panel
+                    internshipType: 1,
                     applicationDate: 1,
                     resumePath: 1,
+                    CGPA: 1, // This sends the CGPA to the admin panel
                     studentName: { $ifNull: [ "$studentDetails.fullName", "N/A" ] },
                     studentEmail: { $ifNull: [ "$studentDetails.email", "$studentEmail" ] }
                 }

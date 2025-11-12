@@ -1,7 +1,7 @@
-// models/Internship.js
+// models/InternshipApplication.js
 const mongoose = require('mongoose');
 
-const internshipSchema = new mongoose.Schema({
+const internshipApplicationSchema = new mongoose.Schema({
     studentEmail: {
         type: String,
         required: true
@@ -16,19 +16,20 @@ const internshipSchema = new mongoose.Schema({
     },
     internshipType: {
         type: String,
-        required: true,
-        enum: ['In-house', 'Out-house'] // Ensures only these two values are allowed
+        required: true
+    },
+    CGPA: {
+        type: Number,
+        required: true
     },
     applicationDate: {
         type: Date,
         default: Date.now
     },
     resumePath: {
-        type: String,
-        required: true
-    },
+        type: String
+    }
 });
 
-const Internship = mongoose.model('Internship', internshipSchema);
-
-module.exports = Internship;
+const InternshipApplication = mongoose.model('InternshipApplication', internshipApplicationSchema);
+module.exports = InternshipApplication;

@@ -2,18 +2,25 @@
 const mongoose = require('mongoose');
 
 const applicationSchema = new mongoose.Schema({
-    studentEmail: { // Use email to link, or studentId after a login flow
-        type: String,
-        required: true
+    studentEmail: {
+        type: String,
+        required: true
+    },
+    company: { type: String, required: true },
+    jobTitle: { type: String, required: true },
+    
+    // 👇 --- THIS IS THE FIX --- 👇
+    CGPA: { 
+        type: Number, // Use 'Number', not 'Float'
+        required: true 
     },
-    company: { type: String, required: true },
-    jobTitle: { type: String, required: true },
-    applicationDate: {
-        type: Date,
-        default: Date.now
-    },
-    // If you implement resume upload:
-     resumePath: String, // Store path to the uploaded file
+    // 👆 --- END OF FIX --- 👆
+
+    applicationDate: {
+        type: Date,
+        default: Date.now
+    },
+    resumePath: String, 
 });
 
 const Application = mongoose.model('Application', applicationSchema);
